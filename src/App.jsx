@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { Layout } from 'antd';
 import { AuthProvider } from './contexts/AuthContext';
 import { PlanProvider } from './contexts/PlanContext';
 import Header from './components/Header';
@@ -13,15 +12,13 @@ import PlanDetail from './pages/PlanDetail';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
-const { Content } = Layout;
-
 const App = () => {
   return (
     <AuthProvider>
       <PlanProvider>
-        <Layout className="min-h-screen bg-background">
+        <div className="min-h-screen bg-background text-foreground page-transition">
           <Header />
-          <Content className="flex-1">
+          <main className="flex-1">
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<Auth />} />
@@ -30,9 +27,9 @@ const App = () => {
               <Route path="/plans" element={<Plans />} />
               <Route path="/plan/:planId" element={<PlanDetail />} />
             </Routes>
-          </Content>
+          </main>
           <Footer />
-        </Layout>
+        </div>
         <Toaster />
         <Sonner />
       </PlanProvider>

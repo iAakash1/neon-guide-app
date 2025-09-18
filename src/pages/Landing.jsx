@@ -50,146 +50,212 @@ const Landing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-primary">
-      {/* Hero Section */}
-      <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="mb-12">
-            <Title level={1} className="text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground mb-6">
-              Your AI-Powered
-              <span className="block text-transparent bg-gradient-to-r from-google-blue to-google-green bg-clip-text">
-                Career Advisor
-              </span>
-            </Title>
-            <Paragraph className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Discover your ideal career path with personalized AI recommendations, 
-              detailed learning plans, and expert guidance tailored to your skills and goals.
-            </Paragraph>
-          </div>
+    <div className="min-h-screen bg-background">
+      {/* Modern Hero Section */}
+      <section className="relative overflow-hidden hero-gradient">
+        <div className="absolute inset-0 glow-google-colors opacity-30"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+          <div className="text-center">
+            {/* Floating elements for visual interest */}
+            <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-google-blue/10 float-animation"></div>
+            <div className="absolute top-32 right-20 w-16 h-16 rounded-full bg-google-green/10 float-animation" style={{animationDelay: '2s'}}></div>
+            <div className="absolute bottom-20 left-20 w-12 h-12 rounded-full bg-google-yellow/10 float-animation" style={{animationDelay: '4s'}}></div>
+            
+            <div className="space-y-8 animate-fade-in">
+              {/* Badge */}
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-google-blue/10 border border-google-blue/20 text-google-blue text-sm font-medium">
+                <span className="w-2 h-2 rounded-full bg-google-blue mr-2 animate-pulse"></span>
+                AI-Powered Career Guidance
+              </div>
+              
+              {/* Main Headline */}
+              <div className="space-y-4">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold tracking-tight">
+                  <span className="text-foreground">Your Future</span>
+                  <br />
+                  <span className="text-google-gradient">Starts Here</span>
+                </h1>
+                
+                <p className="max-w-3xl mx-auto text-xl lg:text-2xl text-muted-foreground leading-relaxed">
+                  Discover your ideal career path with AI-powered recommendations, 
+                  personalized learning plans, and expert guidance tailored to your unique goals.
+                </p>
+              </div>
 
-          <Space size="large" className="flex flex-wrap justify-center">
-            <Button
-              type="primary"
-              size="large"
-              onClick={() => user ? navigate('/questionnaire') : navigate('/auth')}
-              className="px-8 py-4 h-auto text-lg font-semibold glow-primary hover:scale-105 transition-transform"
-              icon={<RocketOutlined />}
-            >
-              {user ? 'Start Assessment' : 'Get Started Free'}
-            </Button>
-            <Button
-              size="large"
-              onClick={() => navigate('/plans')}
-              className="px-8 py-4 h-auto text-lg font-semibold glass-card"
-              icon={<ArrowRightOutlined />}
-            >
-              View Sample Plans
-            </Button>
-          </Space>
-
-          {/* Stats Section */}
-          <div className="mt-20 glass-card p-8 rounded-2xl">
-            <Row gutter={[32, 16]} justify="center">
-              {stats.map((stat, index) => (
-                <Col xs={12} sm={6} key={index}>
-                  <Statistic
-                    title={<Text className="text-muted-foreground">{stat.title}</Text>}
-                    value={stat.value}
-                    suffix={stat.suffix}
-                    valueStyle={{ 
-                      color: '#1a73e8',
-                      fontWeight: 'bold',
-                      fontSize: '2rem'
-                    }}
-                  />
-                </Col>
-              ))}
-            </Row>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <Title level={2} className="text-4xl font-bold text-foreground mb-4">
-              How It Works
-            </Title>
-            <Paragraph className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Our AI-powered platform guides you through every step of your career journey
-            </Paragraph>
-          </div>
-
-          <Row gutter={[32, 32]} align="middle">
-            {features.map((feature, index) => (
-              <Col xs={24} md={8} key={index}>
-                <Card 
-                  className="glass-card h-full text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-                  bordered={false}
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+                <button
+                  onClick={() => user ? navigate('/questionnaire') : navigate('/auth')}
+                  className="material-button material-button-primary pulse-glow ripple-effect group"
                 >
-                  <div className="mb-6">
-                    {feature.icon}
-                  </div>
-                  <Title level={4} className="text-foreground mb-4">
-                    {feature.title}
-                  </Title>
-                  <Paragraph className="text-muted-foreground">
-                    {feature.description}
-                  </Paragraph>
-                </Card>
-              </Col>
-            ))}
-          </Row>
+                  <RocketOutlined className="mr-2 group-hover:animate-bounce" />
+                  {user ? 'Start Your Assessment' : 'Get Started Free'}
+                  <ArrowRightOutlined className="ml-2 transition-transform group-hover:translate-x-1" />
+                </button>
+                
+                <button
+                  onClick={() => navigate('/plans')}
+                  className="material-button material-button-secondary scale-hover"
+                >
+                  <BulbOutlined className="mr-2" />
+                  Explore Career Paths
+                </button>
+              </div>
+
+              {/* Trust indicators */}
+              <div className="pt-8 text-center">
+                <p className="text-sm text-muted-foreground mb-4">Trusted by students worldwide</p>
+                <div className="flex justify-center items-center space-x-8 text-2xl font-bold text-google-blue/30">
+                  <span>25K+ Students</span>
+                  <span>•</span>
+                  <span>150+ Careers</span>
+                  <span>•</span>
+                  <span>94% Success</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-card/20">
+      {/* Interactive Stats Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-card/5">
         <div className="max-w-7xl mx-auto">
-          <Row gutter={[48, 32]} align="middle">
-            <Col xs={24} lg={12}>
-              <Title level={2} className="text-4xl font-bold text-foreground mb-6">
-                Why Choose Career Advisor?
-              </Title>
-              <Space direction="vertical" size="large" className="w-full">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="material-card p-6 text-center group cursor-pointer">
+                <div className="text-3xl lg:text-4xl font-bold text-google-blue mb-2 group-hover:text-google-green transition-colors">
+                  {stat.value}{stat.suffix}
+                </div>
+                <div className="text-muted-foreground font-medium">{stat.title}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Features Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl lg:text-5xl font-display font-bold text-foreground mb-6">
+              How It <span className="text-google-gradient">Works</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Our intelligent platform guides you through a comprehensive career discovery process
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div 
+                key={index} 
+                className="glass-card p-8 text-center group cursor-pointer"
+                style={{animationDelay: `${index * 0.2}s`}}
+              >
+                <div className="mb-6 transform group-hover:scale-110 transition-transform duration-300">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-4 group-hover:text-google-blue transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Enhanced Benefits Section */}
+      <section className="py-24 px-4 sm:px-6 lg:px-8 gradient-google">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-4xl lg:text-5xl font-display font-bold text-foreground">
+                  Why Choose <span className="text-google-gradient">Career Advisor</span>?
+                </h2>
+                <p className="text-xl text-muted-foreground">
+                  Experience the future of career planning with our comprehensive platform.
+                </p>
+              </div>
+              
+              <div className="space-y-4">
                 {benefits.map((benefit, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <CheckCircleOutlined className="text-google-green text-lg mt-1" />
-                    <Text className="text-muted-foreground text-lg">
+                  <div 
+                    key={index} 
+                    className="flex items-start space-x-4 p-4 rounded-lg hover:bg-card/50 transition-colors group"
+                  >
+                    <div className="flex-shrink-0">
+                      <CheckCircleOutlined className="text-google-green text-xl group-hover:scale-110 transition-transform" />
+                    </div>
+                    <span className="text-foreground font-medium leading-relaxed">
                       {benefit}
-                    </Text>
+                    </span>
                   </div>
                 ))}
-              </Space>
-            </Col>
-            <Col xs={24} lg={12}>
-              <Card className="glass-card p-8">
-                <Title level={3} className="text-foreground mb-6 text-center">
-                  Ready to Start Your Journey?
-                </Title>
-                <div className="text-center space-y-6">
-                  <Paragraph className="text-muted-foreground text-lg">
+              </div>
+            </div>
+            
+            <div className="lg:pl-8">
+              <div className="material-card p-8 lg:p-12 text-center space-y-8">
+                <div className="space-y-4">
+                  <h3 className="text-2xl lg:text-3xl font-display font-bold text-foreground">
+                    Ready to Start Your Journey?
+                  </h3>
+                  <p className="text-lg text-muted-foreground">
                     Join thousands of students who have successfully planned their careers with our AI advisor.
-                  </Paragraph>
-                  <Button
-                    type="primary"
-                    size="large"
+                  </p>
+                </div>
+                
+                <div className="space-y-6">
+                  <button
                     onClick={() => user ? navigate('/questionnaire') : navigate('/auth')}
-                    className="px-8 py-4 h-auto text-lg font-semibold glow-primary w-full sm:w-auto"
-                    icon={<RocketOutlined />}
+                    className="material-button material-button-primary w-full pulse-glow text-lg py-4"
                   >
+                    <RocketOutlined className="mr-2" />
                     {user ? 'Take Assessment Now' : 'Sign Up Free'}
-                  </Button>
-                  <div className="text-center">
-                    <Text className="text-muted-foreground text-sm">
-                      No credit card required • 100% Free to start
-                    </Text>
+                  </button>
+                  
+                  <div className="text-center space-y-2">
+                    <p className="text-sm text-muted-foreground">
+                      ✓ No credit card required
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      ✓ 100% Free to start
+                    </p>
                   </div>
                 </div>
-              </Card>
-            </Col>
-          </Row>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="material-card p-12 relative overflow-hidden">
+            <div className="absolute inset-0 gradient-glow opacity-50"></div>
+            <div className="relative space-y-6">
+              <h2 className="text-3xl lg:text-4xl font-display font-bold text-foreground">
+                Start Building Your Future Today
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Don't let uncertainty hold you back. Take the first step towards your dream career.
+              </p>
+              <button
+                onClick={() => user ? navigate('/questionnaire') : navigate('/auth')}
+                className="material-button material-button-primary text-lg px-8 py-4 glow-hover"
+              >
+                <RocketOutlined className="mr-2" />
+                Begin Your Assessment
+                <ArrowRightOutlined className="ml-2" />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     </div>
