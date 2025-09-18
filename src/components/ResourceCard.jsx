@@ -9,7 +9,7 @@ import {
   ClockCircleOutlined,
   StarFilled,
   PlusOutlined,
-  ExternalLinkIcon
+  ExportOutlined
 } from '@ant-design/icons';
 
 const { Text } = Typography;
@@ -66,7 +66,7 @@ const ResourceCard = ({ resource, onAddToPlan = null, className = '' }) => {
   };
 
   return (
-    <div className={`material-card group cursor-pointer ${className}`}>
+    <div className={`material-card group cursor-pointer relative ${className}`}>
       {/* Card Header */}
       <div className="p-4 pb-0">
         <div className="flex items-start justify-between mb-3">
@@ -83,7 +83,7 @@ const ResourceCard = ({ resource, onAddToPlan = null, className = '' }) => {
             </div>
           </div>
           <div className="ml-2 flex-shrink-0">
-            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-${typeConfig.color}/10 text-${typeConfig.color} border border-${typeConfig.color}/20 capitalize`}>
+            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${typeConfig.bgColor} text-${typeConfig.color} border ${typeConfig.borderColor} capitalize`}>
               {type}
             </span>
           </div>
@@ -141,7 +141,7 @@ const ResourceCard = ({ resource, onAddToPlan = null, className = '' }) => {
             rel="noopener noreferrer"
             className="flex-1 material-button material-button-secondary text-xs py-2 justify-center space-x-2 no-underline hover:no-underline"
           >
-            <LinkOutlined />
+            <ExportOutlined />
             <span>Open Resource</span>
           </a>
           
