@@ -1,26 +1,29 @@
-import html2pdf from 'html2pdf.js';
-
 /**
- * Export a learning plan to PDF
+ * Export a learning plan to PDF (lazy-loads html2pdf)
  * @param {Object} plan - The plan data to export
  */
 export const exportToPDF = async (plan) => {
   try {
-    // Create HTML content for the PDF
-    const htmlContent = generatePlanHTML(plan);
-    
+    // Build HTML element for the plan
+    const htmlContentElement = generatePlanHTML(plan);
+
+    // Lazy-load html2pdf to avoid bundling it in the main chunk
+    const html2pdfModule = await import('html2pdf.js');
+    // html2pdf is usually the default export (UMD wrapper), so try .default first
+    const html2pdf = html2pdfModule?.default ?? html2pdfModule;
+
     // PDF generation options
     const options = {
       margin: 1,
-      filename: `${plan.selectedPath.replace(/\s+/g, '_')}_Learning_Plan.pdf`,
+      filename: `${(plan.selectedPath || 'learning_plan').replace(/\s+/g, '_')}_Learning_Plan.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
     };
 
-    // Generate and download PDF
-    await html2pdf().set(options).from(htmlContent).save();
-    
+    // Use html2pdf to generate and download PDF from the element
+    await html2pdf().set(options).from(htmlContentElement).save();
+
     return true;
   } catch (error) {
     console.error('PDF Export Error:', error);
@@ -58,14 +61,14 @@ const generatePlanHTML = (plan) => {
     });
   };
 
-  // Header
+  // Header and body HTML (same structure as before)
   container.innerHTML = `
     <div style="border-bottom: 3px solid #1a73e8; padding-bottom: 20px; margin-bottom: 30px;">
       <h1 style="color: #1a73e8; margin: 0; font-size: 32px; font-weight: bold;">
-        ${plan.selectedPath}
+        ${plan.selectedPath || ''}
       </h1>
       <p style="color: #666; margin: 10px 0 0 0; font-size: 16px;">
-        Personalized Learning Plan • Generated ${formatDate(plan.createdAt)}
+        Personalized Learning Plan • Generated ${formatDate(plan.createdAt || new Date())}
       </p>
     </div>
 
@@ -193,4 +196,5 @@ const generateMilestonesHTML = (milestones) => {
   `).join('');
 };
 
+// default export kept for compatibility
 export default { exportToPDF };
