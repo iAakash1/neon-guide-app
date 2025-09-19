@@ -51,66 +51,81 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Modern Hero Section */}
-      <section className="relative overflow-hidden hero-gradient">
-        <div className="absolute inset-0 glow-google-colors opacity-30"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
-          <div className="text-center">
-            {/* Floating elements for visual interest */}
-            <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-google-blue/10 float-animation"></div>
-            <div className="absolute top-32 right-20 w-16 h-16 rounded-full bg-google-green/10 float-animation" style={{animationDelay: '2s'}}></div>
-            <div className="absolute bottom-20 left-20 w-12 h-12 rounded-full bg-google-yellow/10 float-animation" style={{animationDelay: '4s'}}></div>
-            
+              {/* Enhanced Hero Section with Interactive Background */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-32 h-32 rounded-full bg-google-blue/10 float-animation blur-xl"></div>
+          <div className="absolute top-32 right-20 w-24 h-24 rounded-full bg-google-green/10 float-animation blur-lg" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-32 left-20 w-20 h-20 rounded-full bg-google-yellow/10 float-animation blur-lg" style={{animationDelay: '4s'}}></div>
+          <div className="absolute bottom-20 right-32 w-16 h-16 rounded-full bg-google-red/10 float-animation blur-lg" style={{animationDelay: '3s'}}></div>
+          
+          {/* Gradient Orbs */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full glow-google-colors opacity-20 animate-rotate"></div>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 z-10">
+          <div className="text-center">            
             <div className="space-y-8 animate-fade-in">
-              {/* Badge */}
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-google-blue/10 border border-google-blue/20 text-google-blue text-sm font-medium">
-                <span className="w-2 h-2 rounded-full bg-google-blue mr-2 animate-pulse"></span>
-                AI-Powered Career Guidance
+              {/* Enhanced Badge with Pulse Effect */}
+              <div className="inline-flex items-center px-6 py-3 rounded-full bg-google-blue/10 border border-google-blue/20 text-google-blue text-sm font-medium glow-primary">
+                <span className="w-3 h-3 rounded-full bg-google-blue mr-3 animate-pulse"></span>
+                🤖 AI-Powered Career Guidance
+                <span className="ml-3 px-2 py-1 bg-google-blue/20 rounded-full text-xs font-bold">NEW</span>
               </div>
               
-              {/* Main Headline */}
-              <div className="space-y-4">
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold tracking-tight">
-                  <span className="text-foreground">Your Future</span>
-                  <br />
-                  <span className="text-google-gradient">Starts Here</span>
+              {/* Enhanced Main Headline */}
+              <div className="space-y-6">
+                <h1 className="text-5xl sm:text-6xl lg:text-8xl font-display font-black tracking-tight leading-tight">
+                  <span className="text-foreground block">Your Future</span>
+                  <span className="text-google-gradient bg-clip-text animate-pulse-glow">Starts Here</span>
                 </h1>
                 
-                <p className="max-w-3xl mx-auto text-xl lg:text-2xl text-muted-foreground leading-relaxed">
-                  Discover your ideal career path with AI-powered recommendations, 
+                <p className="max-w-4xl mx-auto text-xl lg:text-2xl text-muted-foreground leading-relaxed">
+                  Discover your ideal career path with <span className="text-google-blue font-semibold">AI-powered recommendations</span>, 
                   personalized learning plans, and expert guidance tailored to your unique goals.
                 </p>
               </div>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+              {/* Enhanced CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
                 <button
                   onClick={() => user ? navigate('/questionnaire') : navigate('/auth')}
-                  className="material-button material-button-primary pulse-glow ripple-effect group"
+                  className="material-button material-button-primary pulse-glow ripple-effect group text-lg px-8 py-4 transform hover:scale-105 transition-all duration-300"
                 >
                   <RocketOutlined className="mr-2 group-hover:animate-bounce" />
-                  {user ? 'Start Your Assessment' : 'Get Started Free'}
-                  <ArrowRightOutlined className="ml-2 transition-transform group-hover:translate-x-1" />
+                  {user ? '🚀 Start Your Assessment' : '✨ Get Started Free'}
+                  <ArrowRightOutlined className="ml-2 transition-transform group-hover:translate-x-2" />
                 </button>
                 
                 <button
                   onClick={() => navigate('/plans')}
-                  className="material-button material-button-secondary scale-hover"
+                  className="material-button material-button-secondary scale-hover px-8 py-4 text-lg"
                 >
                   <BulbOutlined className="mr-2" />
-                  Explore Career Paths
+                  💡 Explore Career Paths
                 </button>
               </div>
 
-              {/* Trust indicators */}
-              <div className="pt-8 text-center">
-                <p className="text-sm text-muted-foreground mb-4">Trusted by students worldwide</p>
-                <div className="flex justify-center items-center space-x-8 text-2xl font-bold text-google-blue/30">
-                  <span>25K+ Students</span>
-                  <span>•</span>
-                  <span>150+ Careers</span>
-                  <span>•</span>
-                  <span>94% Success</span>
+              {/* Enhanced Trust Indicators */}
+              <div className="pt-12 text-center">
+                <p className="text-sm text-muted-foreground mb-6 uppercase tracking-wide font-medium">
+                  🌟 Trusted by students worldwide
+                </p>
+                <div className="flex flex-wrap justify-center items-center gap-8 text-lg font-bold">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-google-blue text-2xl">📈</span>
+                    <span className="text-google-blue">25K+ Students</span>
+                  </div>
+                  <div className="text-muted-foreground">•</div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-google-green text-2xl">🎯</span>
+                    <span className="text-google-green">150+ Careers</span>
+                  </div>
+                  <div className="text-muted-foreground">•</div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-google-yellow text-2xl">⭐</span>
+                    <span className="text-google-yellow">94% Success</span>
+                  </div>
                 </div>
               </div>
             </div>

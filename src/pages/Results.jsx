@@ -99,13 +99,17 @@ const Results = () => {
   return (
     <div className="min-h-screen bg-gradient-primary py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
+        {/* Enhanced Header */}
+        <div className="text-center mb-8 space-y-4">
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-google-green/10 border border-google-green/20 text-google-green text-sm font-medium">
+            <span className="w-2 h-2 rounded-full bg-google-green mr-2 animate-pulse"></span>
+            ✨ Analysis Complete
+          </div>
           <Title level={1} className="text-foreground mb-4">
-            Your Personalized Career Recommendations
+            🎯 Your Personalized Career Recommendations
           </Title>
-          <Text className="text-muted-foreground text-lg">
-            Based on your assessment, here are the career paths that best match your profile
+          <Text className="text-muted-foreground text-lg max-w-3xl mx-auto block">
+            Based on your assessment, here are the career paths that <span className="text-google-blue font-semibold">best match your unique profile</span>
           </Text>
         </div>
 

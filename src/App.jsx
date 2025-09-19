@@ -9,8 +9,7 @@ import Questionnaire from './pages/Questionnaire';
 import Results from './pages/Results';
 import Plans from './pages/Plans';
 import PlanDetail from './pages/PlanDetail';
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import NotFound from './pages/NotFound';
 
 const App = () => {
   return (
@@ -26,12 +25,11 @@ const App = () => {
               <Route path="/results" element={<Results />} />
               <Route path="/plans" element={<Plans />} />
               <Route path="/plan/:planId" element={<PlanDetail />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
           <Footer />
         </div>
-        <Toaster />
-        <Sonner />
       </PlanProvider>
     </AuthProvider>
   );

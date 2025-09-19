@@ -12,7 +12,7 @@ const Spinner = ({
   const customIcon = (
     <LoadingOutlined 
       style={{ 
-        fontSize: size === 'large' ? 32 : size === 'small' ? 16 : 24,
+        fontSize: size === 'large' ? 48 : size === 'small' ? 16 : 24,
         color: '#1a73e8' // Google Blue
       }} 
       spin 
@@ -34,13 +34,16 @@ const Spinner = ({
   }
 
   return (
-    <div className={`flex flex-col items-center justify-center space-y-4 ${className}`}>
-      <Spin 
-        indicator={customIcon}
-        size={size}
-      />
+    <div className={`flex flex-col items-center justify-center space-y-6 ${className}`}>
+      <div className="relative">
+        <Spin 
+          indicator={customIcon}
+          size={size}
+        />
+        <div className="absolute inset-0 rounded-full animate-ping bg-google-blue/20 scale-150"></div>
+      </div>
       {tip && (
-        <p className="text-muted-foreground text-sm animate-pulse">
+        <p className="text-muted-foreground text-center animate-pulse max-w-md leading-relaxed">
           {tip}
         </p>
       )}

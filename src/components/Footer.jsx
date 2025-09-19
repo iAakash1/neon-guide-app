@@ -115,7 +115,7 @@ const Footer = () => {
         <div className="py-6 border-t border-border/20">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <div className="text-muted-foreground text-sm">
-              © 2024 Career Advisor. All rights reserved.
+              © 2024 Career Advisor. All rights reserved. Made with ❤️ and AI
             </div>
             
             <nav className="flex items-center space-x-6">
