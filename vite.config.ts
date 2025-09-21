@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
+import { componentTagger } from "lovable-tagger";
 
 /**
  * Minimal Vite config:
@@ -12,7 +13,10 @@ import { visualizer } from "rollup-plugin-visualizer";
 export default defineConfig(({ mode }) => {
   const shouldAnalyze = Boolean(process.env.ANALYZE);
 
-  const plugins: any[] = [react()];
+  const plugins: any[] = [
+    react(),
+    mode === 'development' && componentTagger(),
+  ].filter(Boolean);
 
   if (shouldAnalyze) {
     plugins.push(

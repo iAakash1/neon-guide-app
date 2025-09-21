@@ -588,12 +588,6 @@ const Questionnaire = () => {
                 {currentStep === steps.length - 1 ? 'Generate Results ✨' : 'Next Step'}
               </Button>
             </div>
-                loading={submitting}
-                className="glow-primary font-medium px-8"
-              >
-                {currentStep === steps.length - 1 ? 'Get My Results' : 'Next'}
-              </Button>
-            </div>
           </Form>
         </Card>
       </div>
