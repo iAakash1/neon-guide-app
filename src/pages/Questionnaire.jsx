@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import { 
   Card, Form, Input, Button, Steps, Select, Slider, Checkbox, 
-  Radio, Upload, InputNumber, Typography, Space, Progress, message 
+  Radio, InputNumber, Typography, Space, Progress, message, Switch
 } from 'antd';
 import { 
   UserOutlined, 
   BookOutlined, 
   CodeOutlined,
-  DollarOutlined,
   EnvironmentOutlined,
   FileTextOutlined,
-  RocketOutlined
+  RocketOutlined,
+  BulbOutlined,
+  TargetOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { usePlans } from '../contexts/PlanContext';
 import { suggestCareer } from '../services/api';
 import Spinner from '../components/Spinner';
+import UserProfileStep from '../components/UserProfileStep';
+import SkillTagsInput from '../components/SkillTagsInput';
 
 const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -51,29 +54,39 @@ const Questionnaire = () => {
 
   const steps = [
     {
-      title: 'Basic Info',
+      title: 'User Profile',
       icon: <UserOutlined />,
       description: 'Tell us about yourself'
     },
     {
-      title: 'Education & Skills',
+      title: 'Academic Info',
       icon: <BookOutlined />,
-      description: 'Your academic background'
+      description: 'Your educational background'
     },
     {
-      title: 'Technical Skills',
+      title: 'Skills & Experience',
       icon: <CodeOutlined />,
-      description: 'Coding and technical abilities'
+      description: 'Your technical abilities'
+    },
+    {
+      title: 'Context & Goals',
+      icon: <BulbOutlined />,
+      description: 'Background information'
     },
     {
       title: 'Preferences',
-      icon: <DollarOutlined />,
-      description: 'Time, budget and location'
+      icon: <EnvironmentOutlined />,
+      description: 'Time and location preferences'
     },
     {
-      title: 'Goals & Constraints',
+      title: 'Career Aspirations',
       icon: <RocketOutlined />,
-      description: 'Your career aspirations'
+      description: 'Your goals and constraints'
+    },
+    {
+      title: 'AI Preferences',
+      icon: <TargetOutlined />,
+      description: 'Customize your AI experience'
     }
   ];
 
@@ -100,22 +113,37 @@ const Questionnaire = () => {
       // Prepare questionnaire data
       const questionnaireData = {
         userId: user?.uid || null,
+        // User Profile
+        userRole: values.userRole,
+        experienceLevel: values.experienceLevel,
+        primaryGoal: values.primaryGoal,
+        preferredContact: values.preferredContact,
+        // Academic Info
         studentLevel: values.studentLevel,
         education: values.education,
         topSubjects: values.topSubjects || [],
+        // Skills & Experience
         codingPref: values.codingPref || 0,
         knownSkills: values.knownSkills || [],
+        skillTags: values.skillTags || [],
+        githubOrPortfolio: values.githubOrPortfolio || '',
+        resumeText: values.resumeText || '',
+        // Context & Goals
+        contextInfo: values.contextInfo || '',
+        targetCompanies: values.targetCompanies || [],
+        // Preferences (removed budget)
         hoursPerWeek: values.hoursPerWeek || 10,
-        budgetPerMonth: values.budgetPerMonth || 0,
         goalTimeline: values.goalTimeline || 6,
         locationPref: values.locationPref || 'Remote',
+        // Career Aspirations
         industries: values.industries || [],
-        githubOrPortfolio: values.githubOrPortfolio || '',
         certificationsDesired: values.certificationsDesired || false,
         constraints: values.constraints || '',
         roleSeeking: values.roleSeeking || 'internship',
         riskAppetite: values.riskAppetite || 'balanced',
-        resumeText: values.resumeText || ''
+        // AI Preferences
+        aiConsent: values.aiConsent || false,
+        aiAssistanceLevel: values.aiAssistanceLevel || 50
       };
 
       setCurrentQuestionnaire(questionnaireData);
@@ -142,97 +170,71 @@ const Questionnaire = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return (
-            <div className="space-y-6 animate-fade-in">
-              <Form.Item
-                name="studentLevel"
-                label={<span className="text-foreground font-semibold text-lg">🎓 What's your current academic level?</span>}
-                rules={[{ required: true, message: 'Please select your student level' }]}
-              >
-                <Radio.Group className="w-full">
-                  <Space direction="vertical" className="w-full" size={16}>
-                    <Radio value="9-10" className="glass-card p-6 rounded-xl w-full hover:shadow-lg transition-all duration-300">
-                      <div className="flex items-center space-x-4">
-                        <span className="text-3xl">🌱</span>
-                        <div>
-                          <Text strong className="text-foreground text-lg block">Grades 9-10</Text>
-                          <Text className="text-muted-foreground">High School (Freshman/Sophomore) - Just starting your journey!</Text>
-                        </div>
-                      </div>
-                    </Radio>
-                    <Radio value="11-12" className="glass-card p-6 rounded-xl w-full hover:shadow-lg transition-all duration-300">
-                      <div className="flex items-center space-x-4">
-                        <span className="text-3xl">🚀</span>
-                        <div>
-                          <Text strong className="text-foreground text-lg block">Grades 11-12</Text>
-                          <Text className="text-muted-foreground">High School (Junior/Senior) - Ready to explore career options!</Text>
-                        </div>
-                      </div>
-                    </Radio>
-                    <Radio value="college" className="glass-card p-6 rounded-xl w-full hover:shadow-lg transition-all duration-300">
-                      <div className="flex items-center space-x-4">
-                        <span className="text-3xl">🎯</span>
-                        <div>
-                          <Text strong className="text-foreground text-lg block">College Student</Text>
-                          <Text className="text-muted-foreground">Undergraduate/Graduate - Time to specialize and plan ahead!</Text>
-                        </div>
-                      </div>
-                    </Radio>
-                  </Space>
-                </Radio.Group>
-              </Form.Item>
-
-              <Form.Item
-                name="education"
-                label={<span className="text-foreground font-semibold text-lg">📚 Describe your current education status</span>}
-                rules={[{ required: true, message: 'Please describe your education status' }]}
-              >
-                <Input 
-                  placeholder="e.g., 10th grade at Lincoln High, 3rd year B.Tech Computer Science at MIT"
-                  className="glass-card py-3 text-lg"
-                  prefix={<span className="mr-2">✏️</span>}
-                />
-              </Form.Item>
-            </div>
-        );
+        return <UserProfileStep />;
 
       case 1:
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in">
             <Form.Item
-              name="topSubjects"
-              label="Top Subjects (Select your strongest/favorite subjects)"
+              name="studentLevel"
+              label={<span className="text-foreground font-semibold text-lg">🎓 What's your current academic level?</span>}
+              rules={[{ required: true, message: 'Please select your student level' }]}
             >
-              <Select
-                mode="tags"
-                placeholder="Select or type your subjects"
-                className="w-full"
-                options={subjects.map(subject => ({ label: subject, value: subject }))}
+              <Radio.Group className="w-full">
+                <Space direction="vertical" className="w-full" size={16}>
+                  <Radio value="9-10" className="glass-card p-6 rounded-xl w-full hover:shadow-lg transition-all duration-300">
+                    <div className="flex items-center space-x-4">
+                      <span className="text-3xl">🌱</span>
+                      <div>
+                        <Text strong className="text-foreground text-lg block">Grades 9-10</Text>
+                        <Text className="text-muted-foreground">High School (Freshman/Sophomore) - Just starting your journey!</Text>
+                      </div>
+                    </div>
+                  </Radio>
+                  <Radio value="11-12" className="glass-card p-6 rounded-xl w-full hover:shadow-lg transition-all duration-300">
+                    <div className="flex items-center space-x-4">
+                      <span className="text-3xl">🚀</span>
+                      <div>
+                        <Text strong className="text-foreground text-lg block">Grades 11-12</Text>
+                        <Text className="text-muted-foreground">High School (Junior/Senior) - Ready to explore career options!</Text>
+                      </div>
+                    </div>
+                  </Radio>
+                  <Radio value="college" className="glass-card p-6 rounded-xl w-full hover:shadow-lg transition-all duration-300">
+                    <div className="flex items-center space-x-4">
+                      <span className="text-3xl">🎯</span>
+                      <div>
+                        <Text strong className="text-foreground text-lg block">College Student</Text>
+                        <Text className="text-muted-foreground">Undergraduate/Graduate - Time to specialize and plan ahead!</Text>
+                      </div>
+                    </div>
+                  </Radio>
+                </Space>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
+              name="education"
+              label={<span className="text-foreground font-semibold text-lg">📚 Describe your current education status</span>}
+              rules={[{ required: true, message: 'Please describe your education status' }]}
+            >
+              <Input 
+                placeholder="e.g., 10th grade at Lincoln High, 3rd year B.Tech Computer Science at MIT"
+                className="glass-card py-3 text-lg"
+                prefix={<span className="mr-2">✏️</span>}
               />
             </Form.Item>
 
             <Form.Item
-              name="knownSkills"
-              label="Known Skills & Technologies"
+              name="topSubjects"
+              label={<span className="text-foreground font-semibold text-lg">📖 Top Subjects</span>}
             >
-              <Checkbox.Group className="w-full">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {skills.map(skill => (
-                    <Checkbox key={skill} value={skill} className="glass-card p-2 rounded">
-                      {skill}
-                    </Checkbox>
-                  ))}
-                </div>
-              </Checkbox.Group>
-            </Form.Item>
-
-            <Form.Item
-              name="otherSkills"
-              label="Other Skills (Optional)"
-            >
-              <Input 
-                placeholder="Any other skills not listed above"
-                className="glass-card"
+              <Select
+                mode="tags"
+                placeholder="Select your strongest/favorite subjects"
+                className="w-full glass-card"
+                size="large"
+                options={subjects.map(subject => ({ label: subject, value: subject }))}
               />
             </Form.Item>
           </div>
@@ -242,8 +244,15 @@ const Questionnaire = () => {
         return (
           <div className="space-y-6">
             <Form.Item
+              name="skillTags"
+              label={<span className="text-foreground font-semibold text-lg">🏷️ Skills & Technologies</span>}
+            >
+              <SkillTagsInput placeholder="Search and select your skills..." />
+            </Form.Item>
+
+            <Form.Item
               name="codingPref"
-              label={`Coding Preference: ${form.getFieldValue('codingPref') || 0}/10`}
+              label={<span className="text-foreground font-semibold text-lg">💻 Coding Interest Level: {form.getFieldValue('codingPref') || 0}/10</span>}
             >
               <div className="glass-card p-4 rounded-lg">
                 <Slider
@@ -255,8 +264,9 @@ const Questionnaire = () => {
                     10: 'Highly Interested'
                   }}
                   tooltipVisible={false}
+                  className="mb-2"
                 />
-                <Text className="text-muted-foreground text-sm block mt-2">
+                <Text className="text-muted-foreground text-sm block">
                   How much do you enjoy programming and coding?
                 </Text>
               </div>
@@ -264,21 +274,22 @@ const Questionnaire = () => {
 
             <Form.Item
               name="githubOrPortfolio"
-              label="GitHub Profile or Portfolio (Optional)"
+              label={<span className="text-foreground font-semibold text-lg">🔗 GitHub Profile or Portfolio</span>}
             >
               <Input 
                 placeholder="https://github.com/yourusername or portfolio URL"
-                className="glass-card"
+                className="glass-card py-3"
+                prefix={<span className="mr-2">🌐</span>}
               />
             </Form.Item>
 
             <Form.Item
               name="resumeText"
-              label="Resume Content (Optional)"
+              label={<span className="text-foreground font-semibold text-lg">📄 Resume/Experience Summary</span>}
             >
-              <TextArea
+              <Input.TextArea
                 rows={4}
-                placeholder="Paste your resume content here or describe your experience"
+                placeholder="Paste your resume content here or describe your key experiences and achievements..."
                 className="glass-card"
               />
             </Form.Item>
@@ -289,52 +300,46 @@ const Questionnaire = () => {
         return (
           <div className="space-y-6">
             <Form.Item
-              name="hoursPerWeek"
-              label="Hours per week you can dedicate to learning"
+              name="contextInfo"
+              label={<span className="text-foreground font-semibold text-lg">📝 Additional Context</span>}
             >
-              <InputNumber
-                min={1}
-                max={40}
-                placeholder="e.g., 10"
-                className="w-full glass-card"
-                addonAfter="hours/week"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="budgetPerMonth"
-              label="Monthly learning budget (USD)"
-            >
-              <InputNumber
-                min={0}
-                max={5000}
-                placeholder="e.g., 100"
-                className="w-full glass-card"
-                addonBefore="$"
-                addonAfter="/month"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="goalTimeline"
-              label="Goal Timeline (months)"
-            >
-              <Radio.Group>
-                <Space direction="vertical">
-                  <Radio value={3}>3 months (Intensive)</Radio>
-                  <Radio value={6}>6 months (Balanced)</Radio>
-                  <Radio value={12}>12 months (Comprehensive)</Radio>
-                </Space>
-              </Radio.Group>
-            </Form.Item>
-
-            <Form.Item
-              name="locationPref"
-              label="Work Location Preference"
-            >
-              <Input 
-                placeholder="e.g., Remote, San Francisco, Hybrid"
+              <Input.TextArea
+                rows={6}
+                placeholder="Provide additional context about your situation:
+• Job descriptions you're interested in
+• Company requirements you've seen
+• Specific challenges you're facing
+• Career transition goals
+• Any other relevant information..."
                 className="glass-card"
+                showCount
+                maxLength={2000}
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="targetCompanies"
+              label={<span className="text-foreground font-semibold text-lg">🏢 Target Companies or Organizations</span>}
+            >
+              <Select
+                mode="tags"
+                placeholder="e.g., Google, Microsoft, startups, non-profits..."
+                className="w-full glass-card"
+                size="large"
+                options={[
+                  { label: 'Google', value: 'Google' },
+                  { label: 'Microsoft', value: 'Microsoft' },
+                  { label: 'Apple', value: 'Apple' },
+                  { label: 'Amazon', value: 'Amazon' },
+                  { label: 'Meta (Facebook)', value: 'Meta' },
+                  { label: 'Netflix', value: 'Netflix' },
+                  { label: 'Tesla', value: 'Tesla' },
+                  { label: 'Startups', value: 'Startups' },
+                  { label: 'Non-profits', value: 'Non-profits' },
+                  { label: 'Government', value: 'Government' },
+                  { label: 'Consulting firms', value: 'Consulting firms' },
+                  { label: 'Financial institutions', value: 'Financial institutions' }
+                ]}
               />
             </Form.Item>
           </div>
@@ -344,63 +349,233 @@ const Questionnaire = () => {
         return (
           <div className="space-y-6">
             <Form.Item
+              name="hoursPerWeek"
+              label={<span className="text-foreground font-semibold text-lg">⏰ Weekly Learning Time</span>}
+            >
+              <InputNumber
+                min={1}
+                max={40}
+                placeholder="e.g., 10"
+                className="w-full glass-card"
+                size="large"
+                addonAfter="hours/week"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="goalTimeline"
+              label={<span className="text-foreground font-semibold text-lg">📅 Goal Timeline</span>}
+            >
+              <Radio.Group className="w-full">
+                <Space direction="vertical" className="w-full" size={12}>
+                  <Radio value={3} className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">3 months (Intensive)</Text>
+                      <Text className="text-muted-foreground block text-sm">Fast track, requires 20+ hours/week</Text>
+                    </div>
+                  </Radio>
+                  <Radio value={6} className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">6 months (Balanced)</Text>
+                      <Text className="text-muted-foreground block text-sm">Recommended, 10-15 hours/week</Text>
+                    </div>
+                  </Radio>
+                  <Radio value={12} className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">12 months (Comprehensive)</Text>
+                      <Text className="text-muted-foreground block text-sm">Thorough, 5-10 hours/week</Text>
+                    </div>
+                  </Radio>
+                </Space>
+              </Radio.Group>
+            </Form.Item>
+
+            <Form.Item
+              name="locationPref"
+              label={<span className="text-foreground font-semibold text-lg">🌍 Work Location Preference</span>}
+            >
+              <Input 
+                placeholder="e.g., Remote, San Francisco, Hybrid, Willing to relocate"
+                className="glass-card py-3"
+                prefix={<span className="mr-2">📍</span>}
+              />
+            </Form.Item>
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="space-y-6">
+            <Form.Item
               name="industries"
-              label="Industries of Interest"
+              label={<span className="text-foreground font-semibold text-lg">🏭 Industries of Interest</span>}
             >
               <Select
                 mode="multiple"
                 placeholder="Select industries you're interested in"
-                className="w-full"
+                className="w-full glass-card"
+                size="large"
                 options={industries.map(industry => ({ label: industry, value: industry }))}
               />
             </Form.Item>
 
             <Form.Item
               name="roleSeeking"
-              label="Type of Role Seeking"
+              label={<span className="text-foreground font-semibold text-lg">💼 Type of Role Seeking</span>}
             >
-              <Radio.Group>
-                <Space direction="vertical">
-                  <Radio value="internship">Internship</Radio>
-                  <Radio value="full-time">Full-time Position</Radio>
-                  <Radio value="freelance">Freelance/Contract Work</Radio>
+              <Radio.Group className="w-full">
+                <Space direction="vertical" className="w-full" size={12}>
+                  <Radio value="internship" className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">Internship</Text>
+                      <Text className="text-muted-foreground block text-sm">Gain experience and learn</Text>
+                    </div>
+                  </Radio>
+                  <Radio value="full-time" className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">Full-time Position</Text>
+                      <Text className="text-muted-foreground block text-sm">Ready for full-time employment</Text>
+                    </div>
+                  </Radio>
+                  <Radio value="freelance" className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">Freelance/Contract Work</Text>
+                      <Text className="text-muted-foreground block text-sm">Flexible, project-based work</Text>
+                    </div>
+                  </Radio>
                 </Space>
               </Radio.Group>
             </Form.Item>
 
             <Form.Item
               name="riskAppetite"
-              label="Company Size Preference"
+              label={<span className="text-foreground font-semibold text-lg">🏢 Company Size Preference</span>}
             >
-              <Radio.Group>
-                <Space direction="vertical">
-                  <Radio value="startup">Startup (High risk, high reward)</Radio>
-                  <Radio value="balanced">Mid-size Company (Balanced)</Radio>
-                  <Radio value="corporate">Large Corporation (Stable)</Radio>
+              <Radio.Group className="w-full">
+                <Space direction="vertical" className="w-full" size={12}>
+                  <Radio value="startup" className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">Startup (High risk, high reward)</Text>
+                      <Text className="text-muted-foreground block text-sm">Fast-paced, equity potential</Text>
+                    </div>
+                  </Radio>
+                  <Radio value="balanced" className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">Mid-size Company (Balanced)</Text>
+                      <Text className="text-muted-foreground block text-sm">Good growth with stability</Text>
+                    </div>
+                  </Radio>
+                  <Radio value="corporate" className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">Large Corporation (Stable)</Text>
+                      <Text className="text-muted-foreground block text-sm">Job security, structured growth</Text>
+                    </div>
+                  </Radio>
                 </Space>
               </Radio.Group>
             </Form.Item>
 
             <Form.Item
               name="certificationsDesired"
-              label="Interested in Professional Certifications?"
+              label={<span className="text-foreground font-semibold text-lg">🏆 Professional Certifications</span>}
             >
-              <Radio.Group>
-                <Radio value={true}>Yes, I want to earn industry certifications</Radio>
-                <Radio value={false}>No, I prefer project-based learning</Radio>
+              <Radio.Group className="w-full">
+                <Space direction="vertical" className="w-full" size={12}>
+                  <Radio value={true} className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">Yes, I want to earn industry certifications</Text>
+                      <Text className="text-muted-foreground block text-sm">Build credibility with recognized credentials</Text>
+                    </div>
+                  </Radio>
+                  <Radio value={false} className="glass-card p-4 rounded-lg w-full">
+                    <div>
+                      <Text strong className="text-foreground">No, I prefer project-based learning</Text>
+                      <Text className="text-muted-foreground block text-sm">Focus on building a strong portfolio</Text>
+                    </div>
+                  </Radio>
+                </Space>
               </Radio.Group>
             </Form.Item>
 
             <Form.Item
               name="constraints"
-              label="Any Constraints or Special Considerations?"
+              label={<span className="text-foreground font-semibold text-lg">⚠️ Constraints or Special Considerations</span>}
             >
-              <TextArea
+              <Input.TextArea
                 rows={3}
-                placeholder="e.g., Cannot relocate, prefer evening classes, specific accessibility needs"
+                placeholder="e.g., Cannot relocate, prefer evening classes, specific accessibility needs, family obligations..."
                 className="glass-card"
               />
             </Form.Item>
+          </div>
+        );
+
+      case 6:
+        return (
+          <div className="space-y-6">
+            <Form.Item
+              name="aiConsent"
+              label={<span className="text-foreground font-semibold text-lg">🤖 AI-Powered Features</span>}
+              valuePropName="checked"
+            >
+              <div className="glass-card p-6 rounded-lg">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <Text strong className="text-foreground block">Enable AI Recommendations</Text>
+                    <Text className="text-muted-foreground text-sm">
+                      Get personalized career suggestions, learning paths, and interview preparation powered by AI
+                    </Text>
+                  </div>
+                  <Switch size="large" />
+                </div>
+                <Text className="text-xs text-muted-foreground">
+                  Your responses will be used to generate personalized recommendations. We respect your privacy and don't share personal information.
+                </Text>
+              </div>
+            </Form.Item>
+
+            <Form.Item
+              name="aiAssistanceLevel"
+              label={<span className="text-foreground font-semibold text-lg">🎚️ AI Assistance Level: {form.getFieldValue('aiAssistanceLevel') || 50}%</span>}
+            >
+              <div className="glass-card p-4 rounded-lg">
+                <Slider
+                  min={0}
+                  max={100}
+                  defaultValue={50}
+                  marks={{
+                    0: '🤚 Minimal',
+                    25: '📝 Basic',
+                    50: '🎯 Balanced',
+                    75: '🚀 Detailed',
+                    100: '🧠 Maximum'
+                  }}
+                  tooltipVisible={false}
+                  className="mb-2"
+                />
+                <div className="text-xs text-muted-foreground space-y-1">
+                  <div><strong>Minimal (0-25%):</strong> Basic suggestions only</div>
+                  <div><strong>Balanced (25-75%):</strong> Recommended for most users</div>
+                  <div><strong>Maximum (75-100%):</strong> Comprehensive analysis and detailed guidance</div>
+                </div>
+              </div>
+            </Form.Item>
+
+            <div className="glass-card p-6 rounded-lg bg-blue-50/10 border-blue-200/20">
+              <div className="flex items-start space-x-3">
+                <span className="text-2xl">💡</span>
+                <div>
+                  <Text strong className="text-foreground block mb-2">How AI Helps You</Text>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>• Analyzes your profile against career requirements</li>
+                    <li>• Suggests personalized learning paths</li>
+                    <li>• Identifies skill gaps and provides resources</li>
+                    <li>• Generates interview questions and practice scenarios</li>
+                    <li>• Recommends optimal career transitions</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         );
 

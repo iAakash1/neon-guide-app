@@ -49,9 +49,12 @@ export const suggestCareer = async (questionnaireData) => {
       return await mockSuggestCareer(questionnaireData);
     }
 
+    // Remove budget from questionnaire data before sending to API
+    const { budgetPerMonth, ...cleanQuestionnaireData } = questionnaireData;
+    
     const payload = {
-      userId: questionnaireData.userId || null,
-      questionnaire: questionnaireData
+      userId: cleanQuestionnaireData.userId || null,
+      questionnaire: cleanQuestionnaireData
     };
 
     const response = await api.post('/api/ai/suggest', payload);

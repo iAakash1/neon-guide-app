@@ -7,7 +7,7 @@ export const mockSuggestCareer = async (questionnaireData) => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 2000));
 
-  const { studentLevel, codingPref, topSubjects, industries } = questionnaireData;
+  const { studentLevel, codingPref, topSubjects, industries, skillTags, userRole, experienceLevel } = questionnaireData;
 
   // Generate suggestions based on input
   const suggestions = [];
@@ -18,7 +18,7 @@ export const mockSuggestCareer = async (questionnaireData) => {
       score: 92,
       why: "Your high coding preference and technical background make you an excellent candidate for full stack development. This role combines frontend and backend development, offering diverse challenges and strong job market demand.",
       key_skills: ["JavaScript", "React", "Node.js", "Databases", "Git"],
-      estimated_cost_range: { low: 0, mid: 500, high: 2000 }
+      estimated_cost_range: { low: 0, mid: 500, high: 1800 }
     });
   }
 
@@ -28,7 +28,7 @@ export const mockSuggestCareer = async (questionnaireData) => {
       score: 88,
       why: "Your strong mathematical background combined with analytical thinking makes data science a natural fit. This field is rapidly growing with excellent career prospects and competitive salaries.",
       key_skills: ["Python", "Statistics", "Machine Learning", "SQL", "Data Visualization"],
-      estimated_cost_range: { low: 100, mid: 800, high: 3000 }
+      estimated_cost_range: { low: 100, mid: 800, high: 2500 }
     });
   }
 
@@ -66,7 +66,7 @@ export const mockSuggestCareer = async (questionnaireData) => {
     top_paths: suggestions.slice(0, 3),
     confidence: suggestions.length > 0 ? "high" : "medium",
     skill_gap: {
-      have: questionnaireData.knownSkills || ["Basic Computer Skills"],
+      have: [...(questionnaireData.knownSkills || []), ...(questionnaireData.skillTags || []), "Basic Computer Skills"],
       need: ["Advanced Programming", "Industry Knowledge", "Soft Skills"]
     },
     next_steps: [
